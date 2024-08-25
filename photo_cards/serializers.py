@@ -42,14 +42,3 @@ class PhotoCardSalesSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return super().create(validated_data)
-        
-
-    # def create(self, validated_data):
-    #     user = self.context["request"].user
-    #     duration = validated_data.pop("duration")
-
-    #     validated_data["seller_id"] = user.id
-    #     validated_data["fee"] =validated_data["price"] * 0.2
-    #     validated_data["due_date"] = datetime.now() + timedelta(days=duration)
-
-    #     return super().create(validated_data)
