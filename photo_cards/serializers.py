@@ -62,3 +62,29 @@ class RegisteredPhotoCardListSerializer(serializers.ModelSerializer):
             "group_name",
             "member_name",
         ]
+
+
+class RegisteredPhotoCardDetailSerializer(serializers.ModelSerializer):
+    total_price = serializers.SerializerMethodField()
+    recent_transactions = serializers.SerializerMethodField()
+
+    def get_total_price(self, obj):
+        return obj.price + obj.fee
+    
+    def get_recent_transactions(self, obj):
+        queryset = RegisteredPhotoCard.objects.filter(
+            state="sold",
+            photo_card_id=obj.photo_card.id,
+        ).order_by("sold_date")[:5]
+
+        return queryset.values("sold_date", "price")
+
+    class Meta:
+        model = RegisteredPhotoCard
+        fields = [
+            "id",
+            "price",
+            "fee",
+            "total_price",
+            "recent_transactions",
+        ]
