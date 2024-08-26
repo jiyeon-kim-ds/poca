@@ -4,6 +4,9 @@ from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    회원가입에 사용하는 serializer
+    """
     password = serializers.CharField(write_only=True)
 
     class Meta:
