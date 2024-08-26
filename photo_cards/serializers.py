@@ -1,7 +1,7 @@
-import math
 from datetime import datetime, timedelta
 
 from rest_framework import serializers
+from django.utils import timezone
 
 from photo_cards.models import RegisteredPhotoCard
 
@@ -72,8 +72,9 @@ class RegisteredPhotoCardDetailSerializer(serializers.ModelSerializer):
         return obj.price + obj.fee
     
     def get_recent_transactions(self, obj):
+        # 가장 최근 거래가 5개 구하기
         queryset = RegisteredPhotoCard.objects.filter(
-            state="sold",
+            state=RegisteredPhotoCard.SOLD,
             photo_card_id=obj.photo_card.id,
         ).order_by("sold_date")[:5]
 
@@ -88,3 +89,26 @@ class RegisteredPhotoCardDetailSerializer(serializers.ModelSerializer):
             "total_price",
             "recent_transactions",
         ]
+
+
+class RegisteredPhotoCardUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisteredPhotoCard
+        fields = ["buyer", "state", "sold_date"]
+        read_only_fields = ["buyer", "state", "sold_date"]
+
+    def update(self, instance, validated_data):
+        # buyer를 현재 요청 사용자로 설정
+        instance.buyer = self.context['request'].user
+        # state를 'sold'로 변경
+        instance.state = RegisteredPhotoCard.SOLD
+        # sold_date를 현재 시간으로 설정
+        instance.sold_date = timezone.now()
+
+        instance.save()
+        return instance
+    
+    def validate(self, data):
+        if self.instance.state != RegisteredPhotoCard.AVAILABLE:
+            raise serializers.ValidationError("구매 가능한 상품이 아닙니다.")
+        return data
