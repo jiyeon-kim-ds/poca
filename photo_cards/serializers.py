@@ -42,3 +42,23 @@ class PhotoCardSalesSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return super().create(validated_data)
+
+
+class RegisteredPhotoCardListSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source="photo_card.title")
+    release_type = serializers.CharField(source="photo_card.release_type")
+    group_name = serializers.CharField(source="photo_card.group_name")
+    member_name = serializers.CharField(source="photo_card.member_name")
+
+    class Meta:
+        model = RegisteredPhotoCard
+        fields = [
+            "id",
+            "photo_card_id",
+            "price",
+            "fee",
+            "title",
+            "release_type",
+            "group_name",
+            "member_name",
+        ]
