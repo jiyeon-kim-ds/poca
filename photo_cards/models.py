@@ -74,3 +74,4 @@ class RegisteredPhotoCard(models.Model):
     update_date = models.DateTimeField("수정 날짜", auto_now=True)
     renewal_date = models.DateTimeField("가격 수정 날짜", auto_now_add=True)
     sold_date = models.DateTimeField("판매 날짜", null=True)
+    due_date = models.DateTimeField("판매 기한 날짜")
