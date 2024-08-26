@@ -7,6 +7,9 @@ from photo_cards.models import RegisteredPhotoCard
 
 
 class PhotoCardSalesSerializer(serializers.ModelSerializer):
+    """
+    포토카드 판매 등록에 사용하는 serializer
+    """
     duration = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -45,6 +48,9 @@ class PhotoCardSalesSerializer(serializers.ModelSerializer):
 
 
 class RegisteredPhotoCardListSerializer(serializers.ModelSerializer):
+    """
+    구매 가능 포토카드 리스트를 위한 serializer
+    """
     title = serializers.CharField(source="photo_card.title")
     release_type = serializers.CharField(source="photo_card.release_type")
     group_name = serializers.CharField(source="photo_card.group_name")
@@ -65,6 +71,9 @@ class RegisteredPhotoCardListSerializer(serializers.ModelSerializer):
 
 
 class RegisteredPhotoCardDetailSerializer(serializers.ModelSerializer):
+    """
+    구매 가능한 포토카드의 상세 정보를 위한 serializer
+    """
     total_price = serializers.SerializerMethodField()
     recent_transactions = serializers.SerializerMethodField()
 
@@ -92,6 +101,9 @@ class RegisteredPhotoCardDetailSerializer(serializers.ModelSerializer):
 
 
 class RegisteredPhotoCardUpdateSerializer(serializers.ModelSerializer):
+    """
+    포토카드 구매 데이터 업데이트를 위한 serializer
+    """
     class Meta:
         model = RegisteredPhotoCard
         fields = ["buyer", "state", "sold_date"]

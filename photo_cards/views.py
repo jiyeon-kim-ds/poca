@@ -21,6 +21,10 @@ from photo_cards.serializers import (
 logger = logging.getLogger(__name__)
 
 class PhotoCardSalesViewSet(viewsets.ModelViewSet):
+    """
+    포토카드 판매에 관한 API 클래스
+    현재 판매 등록(POST METHOD)만 가능
+    """
     queryset = RegisteredPhotoCard.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = PhotoCardSalesSerializer
@@ -66,6 +70,12 @@ class PhotoCardPurchaseViewSet(viewsets.ModelViewSet):
         return [permission for permission in permission_classes]
 
     def list(self, request):
+        """_summary_
+        판매 가능한 포토카드 데이터를 반환하는 LIST API
+
+        Args:
+            x
+        """
         queryset = self.get_queryset()
 
         # 최저가 포토카드 서브쿼리
@@ -97,6 +107,13 @@ class PhotoCardPurchaseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def get_cheapest_card(self, obj):
+        """_summary_
+        요청한 포토카드의 구매 가능한 최저가를 찾아 반환하는 메서드, 
+        retrieve, partial_update에서 사용
+        
+        Args:
+            obj: RegisteredPhotoCard 객체
+        """
         try:
             cheapest_obj = self.queryset.filter(
                 photo_card_id=obj.photo_card.id,
@@ -112,6 +129,12 @@ URL: {self.request.path}"
             raise NotFound("구매 가능한 상품이 아닙니다.")
 
     def retrieve(self, request, pk=None):
+        """_summary_
+        사용자가 요청한 포토카드 중 최저가를 보여주는 RETRIEVE API
+        
+        Args: 
+            X
+        """
         queryset = self.get_queryset()
         instance = get_object_or_404(queryset, pk=pk)
         cheapest_obj = self.get_cheapest_card(instance)
@@ -124,6 +147,12 @@ URL: {self.request.path}"
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def partial_update(self, request, *args, **kwargs):
+        """_summary_
+        사용자가 요청한 포토카드를 구매할 수 있는 PARTIAL_UPDATE API
+        
+        Args: 
+            X
+        """
         instance = self.get_object()
         cheapest_obj = self.get_cheapest_card(instance)
 

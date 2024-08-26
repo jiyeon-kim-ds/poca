@@ -10,6 +10,18 @@ from users.models import User
 
 class RegisterView(APIView):
     def post(self, request):
+        """_summary_
+        회원가입에 사용하는 API
+
+        request:
+            required:
+                username: str
+                password: str
+            optional:
+                first_name: str
+                last_name: str
+                email: str
+        """
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -20,6 +32,14 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
+        """_summary_
+        로그인에 사용하는 API
+
+        request:
+            required:
+                username: str
+                password: str
+        """
         username = request.data.get("username")
         password = request.data.get("password")
         
